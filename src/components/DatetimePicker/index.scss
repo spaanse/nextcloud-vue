@@ -3,9 +3,10 @@ $opacity_normal: .7;
 $opacity_full: 1;
 $cell_height: 32px;
 $cell_height_big: 44px;
+$scope_version: 'abc123';
 
 // import the icons font scss
-@import '~Fonts/scss/iconfont-vue';
+//@import '~Fonts/scss/iconfont-vue';
 
 .mx-datepicker[data-v-#{$scope_version}] {
 	width: 210px;
@@ -155,19 +156,19 @@ $cell_height_big: 44px;
 
 			}
 			&.mx-icon-last-year {
-				@include iconfont('arrow-left');
+//				@include iconfont('arrow-left');
 			}
 			&.mx-icon-last-month {
-				@include iconfont('arrow-left-double');
+//				@include iconfont('arrow-left-double');
 			}
 			&.mx-icon-next-month {
-				@include iconfont('arrow-right-double');
+//				@include iconfont('arrow-right-double');
 				// arrows are all before month and year
 				// send them to the end of the row
 				order: 3;
 			}
 			&.mx-icon-next-year {
-				@include iconfont('arrow-right');
+//				@include iconfont('arrow-right');
 				// arrows are all before month and year
 				// send them to the end of the row
 				order: 4;

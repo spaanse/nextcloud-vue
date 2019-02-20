@@ -19,7 +19,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import Action from './Action'
+import Action from './Action.vue'
 
 export default Action
 export { Action }

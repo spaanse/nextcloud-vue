@@ -22,14 +22,11 @@
 
 <template>
 	<DatePicker
-		ref="datepicker"
-		:clearable="false"
-		:minute-step="10"
-		:value="value"
 		v-bind="$attrs"
+		:minute-step="10"
+		:clearable="false"
+		:value="value"
 		v-on="$listeners"
-		@select-year="handleSelectYear"
-		@select-month="handleSelectMonth"
 		@update:value="$emit('update:value', value)" />
 </template>
 
@@ -70,29 +67,6 @@ export default {
 		value: {
 			default() {
 				return new Date()
-			}
-		}
-	},
-
-	methods: {
-		handleSelectYear(year) {
-			if (this.value) {
-				try {
-					const value = new Date(new Date(this.value).setFullYear(year))
-					this.$refs.datepicker.selectDate(value)
-				} catch (error) {
-					console.error('Invalid value', this.value, year)
-				}
-			}
-		},
-		handleSelectMonth(month) {
-			if (this.value) {
-				try {
-					const value = new Date(new Date(this.value).setMonth(month))
-					this.$refs.datepicker.selectDate(value)
-				} catch (error) {
-					console.error('Invalid value', this.value, month)
-				}
 			}
 		}
 	}

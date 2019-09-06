@@ -19,27 +19,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import Vue from 'vue'
+
+const _isMobile = () => {
+	console.log('_isMobile', !!(document.documentElement.clientWidth < 768))
+	// check if content width is under 768px
+    return document.documentElement.clientWidth < 768
+}
+
+const state = Vue.observable({ isMobile: _isMobile() })
+
+const _onResize = () => {
+	// Update mobile mode
+	console.log('onResize')
+	Vue.set(state, 'isMobile', _isMobile())
+}
+
+window.addEventListener('resize', _onResize)
+
+window.mystate = state
 
 export default {
 	data() {
 		return {
-			isMobile: this._isMobile()
-		}
-	},
-	beforeMount() {
-		window.addEventListener('resize', this._onResize)
-	},
-	beforeDestroy() {
-		window.removeEventListener('resize', this._onResize)
-	},
-	methods: {
-		_onResize() {
-			// Update mobile mode
-			this.isMobile = this._isMobile()
-		},
-		_isMobile() {
-			// check if content width is under 768px
-			return document.documentElement.clientWidth < 768
+			isMobile: state.isMobile
 		}
 	}
 }

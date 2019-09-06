@@ -127,7 +127,7 @@ Just set the `pinned` prop.
 				class="app-navigation-entry-icon">
 				<slot v-if="!loading" v-show="isIconShown" name="icon" />
 			</div>
-			<span class="app-navigation-entry__title">{{ title }}</span>
+			<span class="app-navigation-entry__title">{{ title }} {{ isMobile }}</span>
 		</a>
 
 		<AppNavigationIconCollapsible v-if="collapsible" :open="opened" @click.prevent.stop="toggleCollapse" />

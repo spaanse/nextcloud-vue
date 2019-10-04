@@ -20,32 +20,46 @@
 -->
 
 <template>
-	<a
+	<router-link
+		tag="li"
+		:to="to"
+		:exact="exact"
+		:title="title"
 		href="#"
-		class="app-content-list-item">
+		class="acli"
+		@click="onClick">
 		<!-- default slot for avatar or icon -->
 		<slot name="icon" />
-		<div class="app-content-list-item-line-one">
-			<slot name="title" />
+		<div class="acli__content">
+			<div class="acli__content__line-one">
+				<span class="acli__content__line-one__title">
+					{{title}}
+				</span>
+				<span>
+					<Actions
+						v-if="hasActions"
+						menu-align="right"
+						class="acli__content__line-one__actions">
+						<slot name="actions" />
+					</Actions>
+				</span>
+				<span
+					v-if="{hasDetails}"
+					class="acli__content__line-one__details">
+					{{ details }}
+				</span>
+			</div>
+			<div class="acli__content__line-two">
+				<span class="acli__content__line-two__subtitle">
+					<slot name="subtitle" />
+				</span>
+				<span class="acli__content__line-two__counter">
+					<slot
+						name="counter" />
+				</span>
+			</div>
 		</div>
-		<div class="app-content-list-item-line-two">
-			<slot name="subtitle" />
-		</div>
-		<span
-			v-if="{hasDetails}"
-			class="app-content-list-item-details">
-			{{ details }}
-		</span>
-		<Actions
-			v-if="hasActions"
-			menu-align="right"
-			class="app-content-list-item-actions">
-			<slot name="actions" />
-		</Actions>
-		<slot
-			name="counter"
-			class="app-content-list-item-counter" />
-	</a>
+	</router-link>
 </template>
 
 <script>
@@ -65,6 +79,34 @@ export default {
 		details: {
 			type: String,
 			default: ''
+		},
+		/**
+		 *  Title
+		 */
+		title: {
+			type: String,
+			required: true
+		},
+		/**
+		* Pass in `true` if you want the matching behaviour to
+		* be non-inclusive: https://router.vuejs.org/api/#exact
+		*/
+		exact: {
+			type: Boolean,
+			default: false
+		},
+		/**
+		* The route for for the router link.
+		*/
+		to: {
+			type: [String, Object],
+			default: ''
+		}
+	},
+	methods: {
+		// forward click event
+		onClick(event) {
+			this.$emit('click', event)
 		}
 	},
 	computed: {
@@ -81,162 +123,55 @@ export default {
 
 <style lang="scss" scoped>
 
-.app-content-list-item {
+.acli {
 	position: relative;
-	height: 68px;
 	cursor: pointer;
-	padding: 10px 7px;
+	padding: 6px 2px 6px 6px;
 	display: flex;
-	flex-wrap: wrap;
+	justify-content: space-between;
 	align-items: center;
 	flex: 0 0 auto;
-
-	/* Icon fixes */
-	&,
-	> .app-content-list-item-menu {
-		> [class^='icon-'],
-		> [class*=' icon-'] {
-			order: 4;
-			width: 24px;
-			height: 24px;
-			margin: -7px; // right padding of item
-			padding: 22px;
-			opacity: .3;
-			cursor: pointer;
-			&:hover,
-			&:focus {
-				opacity: .7;
-			}
-			&[class^='icon-star'],
-			&[class*=' icon-star'] {
-				opacity: .7;
-				&:hover,
-				&:focus {
-					opacity: 1 ;
-				}
-
-			}
-			&.icon-starred {
-				opacity: 1 ;
-			}
-		}
+	&:hover, &:focus {
+		background-color: rgba(126, 126, 126, 0.137);
 	}
-
-	&:hover,
-	&:focus,
-	&.active {
-		background-color: var(--color-background-dark);
-		// display checkbox on hover/focus/active
-		.app-content-list-item-checkbox.checkbox + label {
+	&:active {
+		background-color:lightblue;
+	}
+	&__content {
+		width: $navigation-width - 60px;
+		&__line-one {
 			display: flex;
-		}
-	}
-
-	.app-content-list-item-checkbox.checkbox + label,
-	.app-content-list-item-star {
-		position: absolute;
-		height: 40px;
-		width: 40px;
-		z-index: 50;
-	}
-
-	.app-content-list-item-checkbox.checkbox {
-		&:checked,
-		&:hover,
-		&:focus,
-		&.active {
-			+ label {
-				// display checkbox if checked
-				display: flex;
-				// if checked, lower the opacity of the avatar
-				+ .app-content-list-item-icon {
-					opacity: .7;
-				}
+			justify-content: space-between;
+			align-items: center;
+			white-space: nowrap;
+			&__title {
+				flex-grow: 1;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				color: rgb(56, 56, 56);
+				padding-right: 4px;
+			}
+			&__actions {
+				margin: -5px 0 -3px 0;
 			}
 		}
-		+ label {
-			top: 14px;
-			left: 7px;
-			// hidden by default, only chown on hover-focus or if checked
-			display: none;
-			&::before {
-				margin: 0;
+		&__line-two {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			white-space: nowrap;
+			&__subtitle {
+				flex-grow: 1;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				color: gray;
+				padding-right: 4px;
 			}
-			/* Hide the star, priority to the checkbox */
-			~ .app-content-list-item-star {
-				display: none;
+			&__counter {
+				margin-right: 8px;
 			}
 		}
-	}
-
-	.app-content-list-item-star {
-		display: flex;
-		top: 10px;
-		left: 32px;
-		background-size: 16px;
-		height: 20px;
-		width: 20px;
-		margin: 0;
-		padding: 0;
-	}
-
-	.app-content-list-item-icon {
-		position: absolute;
-		display: inline-block;
-		height: 40px;
-		width: 40px;
-		line-height: 40px;
-		border-radius: 50%;
-		vertical-align: middle;
-		margin-right: 10px;
-		color: #fff;
-		text-align: center;
-		font-size: 1.5em;
-		text-transform: capitalize;
-		object-fit: cover;
-		user-select: none;
-		cursor: pointer;
-		top: 50%;
-		margin-top: -20px;
-	}
-
-	.app-content-list-item-line-one,
-	.app-content-list-item-line-two {
-		display: block;
-		padding-left: 50px;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		order: 1;
-		flex: 1 1 0px;
-		padding-right: 10px;
-		cursor: pointer;
-	}
-
-	.app-content-list-item-line-two {
-		opacity: .5;
-		order: 3;
-		flex: 1 0;
-		flex-basis: calc(100% - 44px);
-	}
-
-	.app-content-list-item-details {
-		order: 2;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		max-width: 100px;
-		opacity: .5;
-		font-size: 80%;
-		user-select: none;
-	}
-
-	.app-content-list-item-actions {
-		order: 5;
-	}
-
-	.app-content-list-item-counter {
-		order: 6;
 	}
 }
 

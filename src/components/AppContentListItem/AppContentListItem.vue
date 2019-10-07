@@ -20,11 +20,8 @@
 -->
 
 <template>
-	<router-link
-		tag="li"
-		:to="to"
-		:exact="exact"
-		:title="title"
+	<nav-element
+		v-bind="navElement"
 		href="#"
 		class="acli"
 		@click="onClick">
@@ -59,7 +56,7 @@
 				</span>
 			</div>
 		</div>
-	</router-link>
+	</nav-element>
 </template>
 
 <script>
@@ -114,7 +111,22 @@ export default {
 			return (this.details !== '' && !this.$slots.counter)
 		},
 		hasActions() {
-			return (this.$slots.actions)
+			return (!!this.$slots.actions)
+		},
+		// This is used to decide which outer element type to use
+		// li or router-link
+		navElement() {
+			if (this.to !== '') {
+				return {
+					is: 'router-link',
+					tag: 'li',
+					to: this.to,
+					exact: this.exactRoute
+				}
+			}
+			return {
+				is: 'li'
+			}
 		}
 
 	}

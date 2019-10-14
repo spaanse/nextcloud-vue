@@ -74,5 +74,8 @@ export default {
 </script>
 
 <style scoped>
+	p {
+		margin-bottom: 15px;
+	}
 
 </style>

@@ -81,8 +81,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	@import '~Fonts/scss/iconfont-vue';
-	@import '~assets/inputs';
 
 	$input-margin: 4px;
 

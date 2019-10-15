@@ -25,6 +25,7 @@
 	<div class="section">
 		<h2>{{ title }}</h2>
 		<p>{{ description }}</p>
+		<a href="docUrl" class="icon-info" :title="t('settings', 'Open Documentation')"/>
 		<slot> </slot>
 	</div>
 </template>
@@ -36,16 +37,37 @@ export default {
 
 	},
 	props: {
-		initial: {
-			type: Object,
+		title: {
+			type: String,
+			default: '',
 			required: true
+		},
+		description: {
+			type: String,
+			default: ''
 		}
 	}
 }
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+	.section {
+		margin-bottom: auto;
+		display: block;
+		padding: 30px;
+	}
+	.icon-info {
+		padding: 11px 20px;
+		vertical-align: text-bottom;
+		opacity: 0.5;
+		background-position: center;
+	}
+	//titles
+	h2 {
+		font-weight: bold;
+		font-size: 20px;
+	}
 	p {
 		margin-bottom: 15px;
 	}

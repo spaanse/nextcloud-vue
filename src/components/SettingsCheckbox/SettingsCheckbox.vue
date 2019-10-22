@@ -2,6 +2,7 @@
   - @copyright Copyright (c) 2019 Julius Härtl <jus@bitgrid.net>
   -
   - @author Julius Härtl <jus@bitgrid.net>
+  - @author Greta Doci <gretadoci@gmail.com>
   -
   - @license GNU AGPL version 3 or any later version
   -
@@ -21,12 +22,14 @@
   -->
 
 <template>
-	<p>
-		<input :id="id" type="checkbox" class="checkbox"
+	<div class="section">
+		<p>
+			<input :id="id" type="checkbox" class="checkbox">
 			:checked="inputVal" :disabled="disabled" @change="$emit('input', $event.target.checked)">
-		<label :for="id">{{ label }}</label><br>
-		<em v-if="hint !== ''">{{ hint }}</em>
-	</p>
+			<label :for="id">{{ label }}</label><br>
+			<em v-if="hint !== ''">{{ hint }}</em>
+		</p>
+	</div>
 </template>
 
 <script>
@@ -73,9 +76,15 @@ export default {
 }
 </script>
 
-<style scoped>
-	p {
-		margin-bottom: 15px;
-	}
+<style lang="scss" scoped>
+p {
+	margin-bottom: 15px;
+}
+
+.section {
+	margin-bottom: auto;
+	display: block;
+	padding: 30px;
+}
 
 </style>

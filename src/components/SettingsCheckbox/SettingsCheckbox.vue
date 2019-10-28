@@ -20,58 +20,110 @@
   - along with this program. If not, see <http://www.gnu.org/licenses/>.
   -
   -->
+<docs>
+## One checkbox with a hint
+
+```vue
+<template>
+		<SettingsCheckbox
+			label="some text"
+			hint="some hint"
+			v-model="checkedTarget"/>
+</template>
+```
+</docs>
 
 <template>
-	<div class="section">
-		<p>
-			<input :id="id" type="checkbox" class="checkbox">
-			:checked="inputVal" :disabled="disabled" @change="$emit('input', $event.target.checked)">
-			<label :for="id">{{ label }}</label><br>
-			<em v-if="hint !== ''">{{ hint }}</em>
-		</p>
-	</div>
+	<p>
+		<input
+			:id="id"
+			type="checkbox"
+			class="checkbox"
+			:checked="value"
+			:disabled="disabled"
+			@keydown.enter.exact.prevent="checkInput" @change="onChange">
+		<label ref="label" :for="id">{{ label }}</label><br>
+		<em v-if="hint !== ''">{{ hint }}</em>
+	</p>
 </template>
 
 <script>
-let uuid = 0
+
 export default {
 	name: 'SettingsCheckbox',
 	props: {
+		/**
+		 * id attribute of the checkbox element
+		 */
+		id: {
+			type: String,
+			default: 'settings-checkbox-' + this.GenRandomId
+
+		},
 		label: {
 			type: String,
 			required: true
 		},
+		/**
+		 * hint of the checkbox element
+		 */
 		hint: {
 			type: String,
 			default: ''
 		},
-		value: {
+
+		/**
+		 * checked state of the the checkbox element
+		 */
+		checked: {
 			type: Boolean,
 			default: false
 		},
+		/**
+		 * value of the checkbox input
+		 */
+		value: {
+			type: [String, Number],
+			default: ''
+		},
+		/**
+		 * disabled state of the checkbox element
+		 */
 		disabled: {
 			type: Boolean,
 			default: false
 		}
 	},
-	data() {
-		return {
-			inputVal: this.value
+	methods: {
+		checkInput(event) {
+			// by clicking we also trigger the change event
+			this.$refs.label.click()
+		},
+		onChange(event) {
+			/**
+			 * Emitted when the checkbox state is changed
+			 * @type {boolean}
+			 */
+			this.$emit('update:checked', this.$refs.checkbox.checked)
+			/**
+			 * Emitted when the checkbox state is changed
+			 * @type {Event}
+			 */
+			this.$emit('change', event)
+			if (this.$refs.checkbox.checked) {
+				/**
+				 * Emitted when the checkbox is checked
+				 * @type {Event}
+				 */
+				this.$emit('check')
+			} else {
+				/**
+				 * Emitted when the checkbox is unchecked
+				 * @type {Event}
+				 */
+				this.$emit('uncheck')
+			}
 		}
-	},
-	computed: {
-		id() {
-			return 'settings-checkbox-' + this.uuid
-		}
-	},
-	watch: {
-		value(newVal) {
-			this.inputVal = this.value
-		}
-	},
-	beforeCreate: function() {
-		this.uuid = uuid.toString()
-		uuid += 1
 	}
 }
 </script>
@@ -79,12 +131,6 @@ export default {
 <style lang="scss" scoped>
 p {
 	margin-bottom: 15px;
-}
-
-.section {
-	margin-bottom: auto;
-	display: block;
-	padding: 30px;
 }
 
 </style>

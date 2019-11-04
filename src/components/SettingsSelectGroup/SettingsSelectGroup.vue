@@ -2,6 +2,7 @@
   - @copyright Copyright (c) 2019 Julius Härtl <jus@bitgrid.net>
   -
   - @author Julius Härtl <jus@bitgrid.net>
+  - @author Greta Doci <gretadoci@gmail.com>
   -
   - @license GNU AGPL version 3 or any later version
   -
@@ -21,7 +22,7 @@
   -->
 
 <template>
-	<multiselect :value="inputValue"
+	<Multiselect :value="inputValue"
 		:options="groupsArray" :options-limit="5"
 		:placeholder="label"
 		track-by="id"
@@ -31,46 +32,70 @@
 		:disabled="disabled" @input="update"
 		@search-change="asyncFindGroup">
 		<span slot="noResult">{{ t('settings', 'No results') }}</span>
-	</multiselect>
+	</Multiselect>
 </template>
 
 <script>
 import axios from 'nextcloud-axios'
 import Multiselect from 'nextcloud-vue/dist/Components/Multiselect'
-let uuid = 0
+import GenRandomId from 'Utils/GenRandomId'
 export default {
 	name: 'SettingsSelectGroup',
 	components: {
 		Multiselect
 	},
 	props: {
+		/**
+		 * label of the select group element
+		 */
 		label: {
 			type: String,
 			required: true
 		},
+
+		/**
+		 * hint of the select group input
+		 */
 		hint: {
 			type: String,
 			default: ''
 		},
+
+		/**
+		 * id attribute of the select group element
+		 */
+		id: {
+			type: String,
+			default: () => 'action-' + GenRandomId(),
+			validator: id => id.trim() !== ''
+		},
+
+		/**
+		 * value of the select group input
+		 */
 		value: {
 			type: Array,
 			default: () => []
 		},
+
+		/**
+		 * disabled state of the settings select group input
+		 */
 		disabled: {
 			type: Boolean,
 			default: false
 		}
 	},
-	data () {
+	data() {
 		return {
 			groups: {}
 		}
 	},
 	computed: {
-		inputValue () {
+		inputValue() {
 			return this.getValueObject()
 		},
-		getValueObject () {
+		getValueObject() {
 			return this.value.filter((group) => group !== '' && typeof group !== 'undefined').map(
 				(id) => {
 					if (typeof this.groups[id] === 'undefined') {
@@ -83,24 +108,23 @@ export default {
 				}
 			)
 		},
-		id () {
+		id() {
 			return 'settings-select-group-' + this.uuid
 		},
-		groupsArray () {
+		groupsArray() {
 			return Object.values(this.groups)
 		}
 	},
-	created: function () {
+	created: function() {
 		this.uuid = uuid.toString()
 		uuid += 1
-		this.asyncFindGroup('').then((result) => {
-		})
+		this.asyncFindGroup('')
 	},
 	methods: {
-		update () {
+		update() {
 			this.$emit('input', this.inputValue.map((element) => element.id))
 		},
-		asyncFindGroup (query) {
+		asyncFindGroup(query) {
 			query = typeof query === 'string' ? encodeURI(query) : ''
 			return axios.get(OC.linkToOCS(`cloud/groups/details?search=${query}&limit=10`, 2))
 				.then((response) => {

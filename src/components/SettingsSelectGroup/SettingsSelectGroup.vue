@@ -21,7 +21,7 @@
   -->
 
 <template>
-	<multiselect v-model="inputValObjects"
+	<multiselect :value="inputValue"
 		:options="groupsArray" :options-limit="5"
 		:placeholder="label"
 		track-by="id"
@@ -61,34 +61,16 @@ export default {
 			default: false
 		}
 	},
-	data() {
+	data () {
 		return {
-			inputValObjects: [],
 			groups: {}
 		}
 	},
 	computed: {
-		id() {
-			return 'settings-select-group-' + this.uuid
+		inputValue () {
+			return this.getValueObject()
 		},
-		groupsArray() {
-			return Object.values(this.groups)
-		}
-	},
-	watch: {
-		value(newVal) {
-			this.inputValObjects = this.getValueObject()
-		}
-	},
-	created: function() {
-		this.uuid = uuid.toString()
-		uuid += 1
-		this.asyncFindGroup('').then((result) => {
-			this.inputValObjects = this.getValueObject()
-		})
-	},
-	methods: {
-		getValueObject() {
+		getValueObject () {
 			return this.value.filter((group) => group !== '' && typeof group !== 'undefined').map(
 				(id) => {
 					if (typeof this.groups[id] === 'undefined') {
@@ -101,10 +83,24 @@ export default {
 				}
 			)
 		},
-		update() {
-			this.$emit('input', this.inputValObjects.map((element) => element.id))
+		id () {
+			return 'settings-select-group-' + this.uuid
 		},
-		asyncFindGroup(query) {
+		groupsArray () {
+			return Object.values(this.groups)
+		}
+	},
+	created: function () {
+		this.uuid = uuid.toString()
+		uuid += 1
+		this.asyncFindGroup('').then((result) => {
+		})
+	},
+	methods: {
+		update () {
+			this.$emit('input', this.inputValue.map((element) => element.id))
+		},
+		asyncFindGroup (query) {
 			query = typeof query === 'string' ? encodeURI(query) : ''
 			return axios.get(OC.linkToOCS(`cloud/groups/details?search=${query}&limit=10`, 2))
 				.then((response) => {

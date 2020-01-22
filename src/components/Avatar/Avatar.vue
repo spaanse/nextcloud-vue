@@ -65,11 +65,19 @@
 		<div v-if="userDoesNotExist" class="unknown">
 			{{ initials }}
 		</div>
-		<div v-if="hasMenu" v-show="contactsMenuOpenState"
-			class="popovermenu"
-			:class="`menu-${menuPosition}`">
-			<PopoverMenu :is-open="contactsMenuOpenState" :menu="menu" />
-		</div>
+		<Popover
+			v-if="hasMenu"
+			placement="auto"
+			:open="contactsMenuOpenState">
+			<template>
+				<ul
+					v-for="(item, key) in contactsMenuActions"
+					:key="key">
+					<PopoverMenuItem :key="key" :item="item" />
+				</ul>
+				<p>Dummy content</p>
+			</template>
+		</Popover>
 	</div>
 </template>
 
@@ -77,10 +85,11 @@
 
 /* global OC oc_userconfig */
 import { directive as ClickOutside } from 'v-click-outside'
-import { PopoverMenu } from 'Components/PopoverMenu'
 import axios from '@nextcloud/axios'
 import Tooltip from 'Directives/Tooltip'
 import uidToColor from './uidToColor'
+import Popover from 'Components/Popover'
+import PopoverMenuItem from 'Components/PopoverMenu/PopoverMenuItem'
 
 export default {
 	name: 'Avatar',
@@ -89,7 +98,8 @@ export default {
 		ClickOutside
 	},
 	components: {
-		PopoverMenu
+		Popover,
+		PopoverMenuItem
 	},
 	props: {
 		/**

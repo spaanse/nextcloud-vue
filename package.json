@@ -39,7 +39,7 @@
 		"md5": "^2.2.1",
 		"regenerator-runtime": "^0.13.3",
 		"v-click-outside": "^3.0.0",
-		"v-tooltip": "^2.0.0-rc.33",
+		"v-tooltip": "^2.0.3",
 		"vue": "^2.6.7",
 		"vue-color": "^2.7.0",
 		"vue-multiselect": "^2.1.3",

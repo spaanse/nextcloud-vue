@@ -80,23 +80,21 @@ https://www.w3.org/TR/wai-aria-practices/examples/menu-button/menu-button-action
 		@keydown.page-down.exact.prevent="focusLastAction">
 		<!-- If more than one action, create a popovermenu -->
 		<Popover
-			:placement="auto"
+			placement="auto"
 			container="body"
-   			coundariesElement="body"
-			:handleResize="true" >
-			<a class="icon action-item__menutoggle"
+			boundaries-element="body"
+			:handle-resize="true"
+			:open.sync="opened">
+			<a slot="trigger"
+				class="icon action-item__menutoggle"
 				:class="defaultIcon"
-				slot="trigger"
 				href="#" aria-haspopup="true"
 				:aria-controls="randomId"
-				:aria-expanded="opened"
-				@click.prevent="toggleMenu"
-				@keydown.space.exact.prevent="toggleMenu" />
+				:aria-expanded="opened" />
 			<div v-if="opened"
 				ref="menu"
 				tabindex="-1"
 				@mousemove="onMouseFocusAction">
-
 				<!-- menu content -->
 				<ul :id="randomId" tabindex="-1">
 					<slot />
@@ -106,10 +104,8 @@ https://www.w3.org/TR/wai-aria-practices/examples/menu-button/menu-button-action
 	</div>
 </template>
 <script>
-import { directive as ClickOutside } from 'v-click-outside'
 import Tooltip from 'Directives/Tooltip'
 import GenRandomId from 'Utils/GenRandomId'
-import IsOutOfViewport from 'Utils/IsOutOfViewport'
 import ValidateSlot from 'Utils/ValidateSlot'
 import Popover from 'Components/Popover'
 // This is the list of ALL the ALLOWED components
@@ -140,7 +136,6 @@ export default {
 	name: 'Actions',
 
 	directives: {
-		ClickOutside,
 		tooltip: Tooltip
 	},
 
@@ -166,17 +161,6 @@ export default {
 		},
 
 		/**
-		 * Specify the position of the popovermenu
-		 * `left`, `center` or `right`
-		 */
-		menuAlign: {
-			type: String,
-			default: 'center',
-			validator: align => {
-				return ['left', 'center', 'right'].indexOf(align) > -1
-			}
-		},
-		/**
 		 * Icon to show for the toggle menu button
 		 * when more than one action is inside the actions component.
 		 * Only replace the default three-dot icon if really necessary.
@@ -190,13 +174,11 @@ export default {
 	data() {
 		return {
 			actions: [],
-			opened: this.open,
+			opened: false,
 			focusIndex: 0,
 			randomId: 'menu-' + GenRandomId(),
 			offsetX: 0,
 			offsetY: 0,
-			offsetYArrow: 0,
-			rotateArrow: false,
 			// Making children reactive!
 			// By binding this here, vuejs will track the object content
 			// Needed for firstAction reactivity !!!
@@ -283,16 +265,6 @@ export default {
 		}
 	},
 
-	watch: {
-		open(newVal) {
-			this.opened = newVal
-			if (this.opened) {
-				this.$nextTick(() => {
-					this.onOpen()
-				})
-			}
-		}
-	},
 	beforeMount() {
 		// init actions
 		this.initActions()
@@ -313,85 +285,6 @@ export default {
 	},
 
 	methods: {
-		// MENU STATE MANAGEMENT
-		toggleMenu(e) {
-			this.opened = !this.opened
-			// focus first on menu open after opening the menu
-			if (this.opened) {
-				this.$nextTick(() => {
-					this.onOpen()
-					this.focusFirstAction()
-				})
-				/**
-				 * Event emitted when the popover menu is opened
-				 * @type {null}
-				 */
-				this.$emit('open', e)
-			} else {
-				this.offsetX = 0
-				this.offsetY = 0
-				this.offsetYArrow = 0
-				this.rotateArrow = false
-			}
-
-			/**
-			 * Event emitted when the popover menu open state is changed
-			 * @type {bool}
-			 */
-			this.$emit('update:open', this.opened)
-		},
-		closeMenu(e) {
-			/**
-			 * only emit events if it was opened
-			 * or else any click on the page will trigger
-			 * the click outside directive!
-			 */
-			if (this.opened) {
-				/**
-				 * Event emitted when the popover menu open state is changed
-				 * @type {bool}
-				 */
-				this.$emit('update:open', false)
-				/**
-				 * Event emitted when the popover menu is closed
-				 * @type {null}
-				 */
-				this.$emit('close', e)
-
-			}
-
-			// close everything
-			this.opened = false
-			this.offsetX = 0
-			this.offsetY = 0
-			this.offsetYArrow = 0
-			this.rotateArrow = false
-		},
-
-		/**
-		 * Run when the user open the menu
-		 * if align=center, we automatically
-		 * shift the popup if it's out of bound
-		 */
-		onOpen() {
-			this.offsetX = 0
-			this.offsetY = 0
-			this.offsetYArrow = 0
-			this.rotateArrow = false
-			if (this.menuAlign === 'center') {
-				const isOut = IsOutOfViewport(this.$refs.menu)
-				if (isOut.left || isOut.right) {
-					this.offsetX = isOut.offsetX > 0
-						? Math.round(isOut.offsetX) + 5
-						: Math.round(isOut.offsetX) - 5
-				}
-				if (isOut.bottom) {
-					this.offsetY = 0 - Math.round(this.$refs.menu.clientHeight) - 42
-					this.offsetYArrow = Math.round(this.$refs.menu.clientHeight) + 18
-					this.rotateArrow = true
-				}
-			}
-		},
 
 		// MENU KEYS & FOCUS MANAGEMENT
 		// focus nearest focusable item on mouse move
@@ -469,9 +362,6 @@ export default {
 <style lang="scss" scoped>
 @import '~Fonts/scss/iconfont-vue';
 
-// arrow distance to the border
-$arrow-margin: ($clickable-area - 2 * $arrow-width)  / 2;
-
 .action-item {
 	position: relative;
 	display: inline-block;
@@ -541,89 +431,6 @@ $arrow-margin: ($clickable-area - 2 * $arrow-width)  / 2;
 		& > [hidden] {
 			display: none;
 		}
-	}
-
-	// properly position the menu
-	&--multiple {
-		position: relative;
-	}
-
-	&__menu {
-
-
-		// make sure to not have the menu right
-		// on the edge of the window
-		margin-bottom: 10px;
-		margin-top: -5px;
-
-		transform: translateX(50%);
-
-		color: var(--color-main-text);
-		border-radius: var(--border-radius);
-		background-color: var(--color-main-background);
-
-		filter: drop-shadow(0 1px 3px var(--color-box-shadow));
-
-		// only allow li elements in the popovermenu
-		ul > :not(li) {
-			display: none;
-		}
-
-		&.open {
-			display: block;
-		}
-
-		/* Arrow */
-		.action-item__menu_arrow {
-			position: absolute;
-			right: 50%;
-			bottom: 100%;
-
-			width: 0;
-			height: 0;
-			margin-right: - $arrow-width;
-
-			content: ' ';
-			pointer-events: none;
-
-			/* change this to adjust the arrow position */
-			border: solid transparent;
-			border-width: $arrow-width;
-			border-bottom-color: var(--color-main-background);
-		}
-
-		/* Align the popover to the right */
-		&.menu-right {
-			right: 0;
-			left: auto;
-			transform: none;
-			.action-item__menu_arrow {
-				// align to menu icon padding
-				right: $arrow-margin;
-				margin-right: 0;
-			}
-		}
-
-		/* Align the popover to the left */
-		&.menu-left {
-			right: auto;
-			left: 0;
-			transform: none;
-			.action-item__menu_arrow {
-				right: auto;
-				// align to menu icon padding
-				left: $arrow-margin;
-				margin-right: 0;
-			}
-		}
-	}
-}
-
-.ie,
-.edge {
-	.action-item__menu,
-	.action-item__menu .action-item__menu_arrow {
-		border: 1px solid var(--color-border);
 	}
 }
 </style>

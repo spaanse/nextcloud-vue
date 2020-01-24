@@ -77,33 +77,32 @@ https://www.w3.org/TR/wai-aria-practices/examples/menu-button/menu-button-action
 		@keydown.down.exact.prevent="focusNextAction"
 		@keydown.shift.tab.prevent="focusPreviousAction"
 		@keydown.page-up.exact.prevent="focusFirstAction"
-		@keydown.page-down.exact.prevent="focusLastAction"
-		@keydown.esc.exact.prevent="closeMenu">
+		@keydown.page-down.exact.prevent="focusLastAction">
 		<!-- If more than one action, create a popovermenu -->
-		<a class="icon action-item__menutoggle"
-			:class="defaultIcon"
-			href="#" aria-haspopup="true"
-			:aria-controls="randomId"
-			:aria-expanded="opened"
-			@click.prevent="toggleMenu"
-			@keydown.space.exact.prevent="toggleMenu" />
-		<div v-if="opened"
-			ref="menu"
-			v-click-outside="closeMenu"
-			:class="[`menu-${menuAlign}`, { 'open': opened }]"
-			:style="{marginRight: `${ offsetX }px`, marginTop: `${ offsetY }px`}"
-			class="action-item__menu"
-			tabindex="-1"
-			@mousemove="onMouseFocusAction">
-			<!-- arrow -->
-			<div class="action-item__menu_arrow"
-				:style="{ transform: `translateX(${ offsetX }px) translateY(${ offsetYArrow }px) ${ rotateArrow ? ' rotate(180deg)' : ''}` }" />
+		<Popover
+			:placement="auto"
+			container="body"
+   			coundariesElement="body"
+			:handleResize="true" >
+			<a class="icon action-item__menutoggle"
+				:class="defaultIcon"
+				slot="trigger"
+				href="#" aria-haspopup="true"
+				:aria-controls="randomId"
+				:aria-expanded="opened"
+				@click.prevent="toggleMenu"
+				@keydown.space.exact.prevent="toggleMenu" />
+			<div v-if="opened"
+				ref="menu"
+				tabindex="-1"
+				@mousemove="onMouseFocusAction">
 
-			<!-- menu content -->
-			<ul :id="randomId" tabindex="-1">
-				<slot />
-			</ul>
-		</div>
+				<!-- menu content -->
+				<ul :id="randomId" tabindex="-1">
+					<slot />
+				</ul>
+			</div>
+		</Popover>
 	</div>
 </template>
 <script>
@@ -112,7 +111,7 @@ import Tooltip from 'Directives/Tooltip'
 import GenRandomId from 'Utils/GenRandomId'
 import IsOutOfViewport from 'Utils/IsOutOfViewport'
 import ValidateSlot from 'Utils/ValidateSlot'
-
+import Popover from 'Components/Popover'
 // This is the list of ALL the ALLOWED components
 // in the default SLOT
 const allowedChildren = [
@@ -143,6 +142,10 @@ export default {
 	directives: {
 		ClickOutside,
 		tooltip: Tooltip
+	},
+
+	components: {
+		Popover
 	},
 
 	props: {
@@ -546,11 +549,7 @@ $arrow-margin: ($clickable-area - 2 * $arrow-width)  / 2;
 	}
 
 	&__menu {
-		position: absolute;
-		z-index: 110;
-		right: 50%;
 
-		display: none;
 
 		// make sure to not have the menu right
 		// on the edge of the window

@@ -24,7 +24,7 @@
 @mixin action-active {
 	li {
 		&.active {
-			box-shadow: inset 4px 0 var(--color-primary);
+			background-color: var(--color-primary-light);
 		}
 	}
 }
@@ -54,7 +54,6 @@
 		margin: 0;
 		padding: 0;
 		padding-right: $icon-margin;
-
 		cursor: pointer;
 		white-space: nowrap;
 
@@ -71,6 +70,8 @@
 		&:hover,
 		&:focus {
 			opacity: $opacity_full;
+			background-color: var(--color-background-hover);
+			border-radius: 4px;
 		}
 
 		& > span {

@@ -36,9 +36,9 @@
 </template>
 
 <script>
+import Multiselect from 'dist/Components/Multiselect'
+import GenRandomId from 'src/utils/GenRandomId'
 import axios from 'nextcloud-axios'
-import Multiselect from 'nextcloud-vue/dist/Components/Multiselect'
-import GenRandomId from 'Utils/GenRandomId'
 export default {
 	name: 'SettingsSelectGroup',
 	components: {
@@ -108,16 +108,19 @@ export default {
 				}
 			)
 		},
-		id() {
-			return 'settings-select-group-' + this.uuid
+		/**
+		 * @return {string}
+		 */
+		GenRandomId() {
+			return 'settings-select-group-' + this.GenRandomId
 		},
 		groupsArray() {
 			return Object.values(this.groups)
 		}
 	},
 	created: function() {
-		this.uuid = uuid.toString()
-		uuid += 1
+		this.GenRandomId = GenRandomId.toString()
+		GenRandomId += 1
 		this.asyncFindGroup('')
 	},
 	methods: {

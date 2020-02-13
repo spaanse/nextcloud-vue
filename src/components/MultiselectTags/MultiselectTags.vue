@@ -86,6 +86,7 @@ export default {
 import l10n from '../../mixins/l10n'
 import { Multiselect } from 'Components/Multiselect'
 import { searchTags } from './api'
+import { t } from '../../l10n'
 
 export default {
 	name: 'MultiselectTags',

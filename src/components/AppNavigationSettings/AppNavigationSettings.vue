@@ -40,8 +40,10 @@
 
 <script>
 import { directive as ClickOutside } from 'v-click-outside'
+import l10n from '../../mixins/l10n'
 
 export default {
+	mixins: [l10n],
 	directives: {
 		ClickOutside
 	},
@@ -49,8 +51,7 @@ export default {
 		title: {
 			type: String,
 			required: false,
-			// TODO: translate
-			default: t('core', 'Settings')
+			default: t('Settings')
 		}
 	},
 	data() {

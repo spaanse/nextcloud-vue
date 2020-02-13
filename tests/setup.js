@@ -22,6 +22,8 @@
 
 import { config } from '@vue/test-utils'
 
+global.TRANSLATIONS = []
+
 // Mock nextcloud translate functions
 config.mocks.$t = function(app, string) {
 	return string

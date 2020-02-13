@@ -166,19 +166,20 @@ Please see the [AvatarSelectOption](#AvatarSelectOption) component
 			<slot :name="slot" v-bind="scope" />
 		</template>
 
-		<!-- TODO add translation system
-		<span slot="noResult">{{ t('core', 'No results') }}</span> -->
+		<span slot="noResult">{{ t('No results') }}</span>
 	</VueMultiselect>
 </template>
 
 <script>
 import AvatarSelectOption from './AvatarSelectOption'
 import EllipsisedOption from './EllipsisedOption'
+import l10n from '../../mixins/l10n'
 import Tooltip from 'Directives/Tooltip'
 import VueMultiselect from 'vue-multiselect'
 
 export default {
 	name: 'Multiselect',
+	mixins: [l10n],
 	components: {
 		AvatarSelectOption,
 		EllipsisedOption,

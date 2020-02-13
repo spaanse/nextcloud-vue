@@ -1,4 +1,5 @@
 const fs = require('fs')
+const gettextParser = require('gettext-parser')
 const glob = require('glob')
 const md5 = require('md5')
 const path = require('path')

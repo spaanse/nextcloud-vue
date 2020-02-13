@@ -20,21 +20,5 @@
  *
  */
 
-import { config } from '@vue/test-utils'
-
 global.TRANSLATIONS = []
-
-// Mock nextcloud translate functions
-config.mocks.$t = function(app, string) {
-	return string
-}
-config.mocks.t = config.mocks.$t
-global.t = config.mocks.$t
-
-config.mocks.$n = function(app, singular, plural, count) {
-	return singular
-}
-config.mocks.n = config.mocks.$n
-global.n = config.mocks.$n
-
 global.SCOPE_VERSION = 1

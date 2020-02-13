@@ -40,13 +40,12 @@
 
 <script>
 import { directive as ClickOutside } from 'v-click-outside'
-import l10n from '../../mixins/l10n'
+import { t } from '../../l10n'
 
 export default {
 	directives: {
 		ClickOutside
 	},
-	mixins: [l10n],
 	props: {
 		title: {
 			type: String,

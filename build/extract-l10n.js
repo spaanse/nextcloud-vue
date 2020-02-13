@@ -10,6 +10,13 @@ extractor
                 context: 1
             }
         }),
+        JsExtractors.callExpression('n', {
+            arguments: {
+                text: 1,
+                textPlural: 2,
+                context: 3
+            }
+        }),
     ])
     .parseFilesGlob('./src/**/*.@(ts|js|vue)');
 

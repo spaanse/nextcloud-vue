@@ -157,11 +157,11 @@ import Popover from '../Popover'
 
 export default {
 	name: 'ColorPicker',
-	mixins: [l10n],
 	components: {
 		Chrome,
 		Popover
 	},
+	mixins: [l10n],
 
 	props: {
 		/**

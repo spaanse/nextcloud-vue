@@ -196,13 +196,13 @@ const IsValidString = function(value) {
 
 export default {
 	name: 'AppSidebar',
-	mixins: [l10n],
 	components: {
 		Actions
 	},
 	directives: {
 		focus: Focus
 	},
+	mixins: [l10n],
 	props: {
 		active: {
 			type: String,

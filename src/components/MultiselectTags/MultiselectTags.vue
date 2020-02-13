@@ -89,10 +89,10 @@ import { searchTags } from './api'
 
 export default {
 	name: 'MultiselectTags',
-	mixins: [l10n],
 	components: {
 		Multiselect
 	},
+	mixins: [l10n],
 	props: {
 		label: {
 			type: String,
@@ -165,10 +165,10 @@ export default {
 		 */
 		tagLabel({ displayName, userVisible, userAssignable }) {
 			if (userVisible === false) {
-				return t('%s (invisible)', {tag: displayName})
+				return t('%s (invisible)', { tag: displayName })
 			}
 			if (userAssignable === false) {
-				return t('%s (restricted)', {tag: displayName})
+				return t('%s (restricted)', { tag: displayName })
 			}
 			return displayName
 		}

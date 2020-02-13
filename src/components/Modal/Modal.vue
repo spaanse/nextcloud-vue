@@ -173,8 +173,6 @@ import Timer from 'Utils/Timer'
 export default {
 	name: 'Modal',
 
-	mixins: [l10n],
-
 	components: {
 		Actions,
 		ActionButton
@@ -183,6 +181,8 @@ export default {
 	directives: {
 		tooltip: Tooltip
 	},
+
+	mixins: [l10n],
 
 	props: {
 		/**

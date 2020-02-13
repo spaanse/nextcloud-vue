@@ -179,7 +179,6 @@ import VueMultiselect from 'vue-multiselect'
 
 export default {
 	name: 'Multiselect',
-	mixins: [l10n],
 	components: {
 		AvatarSelectOption,
 		EllipsisedOption,
@@ -188,6 +187,7 @@ export default {
 	directives: {
 		tooltip: Tooltip
 	},
+	mixins: [l10n],
 	inheritAttrs: false,
 
 	/**
